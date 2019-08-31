@@ -54,7 +54,7 @@ class DatReader:
         for game_entry in xml_root.findall('game'):
             rom = game_entry.find('rom')
             romfile = rom.attrib.get('name')
-            sha1 = rom.attrib.get('sha1')
+            sha1 = rom.attrib.get('sha1').upper()
             if romfile is None or sha1 is None:
                 continue
             #if sha1 in self.games_by_sha1:
