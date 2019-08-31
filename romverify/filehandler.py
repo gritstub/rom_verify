@@ -19,9 +19,31 @@ class FileHandler:
         else:
             return open(self.filename, 'rb', buffering=0)
 
+    def is_ines(self):
+       with self.open() as fp_in:
+           data = fp_in.read(3)
+       return data == b'NES'
+
+    def is_nes(self):
+       with self.open() as fp_in:
+           data = fp_in.read(4)
+       return data == b'NES\x1a'
+
+    def is_unif(self):
+       with self.open() as fp_in:
+           data = fp_in.read(4)
+       return data == b'UNIF'
+
     def get_sha1sum(self):
         hasher = hashlib.sha1()
+        skip_bytes = 0
+        if self.is_nes() or self.is_ines():
+            skip_bytes = 16
+        if self.is_unif():
+            skip_bytes = 32
         with self.open() as fp_in:
+            if skip_bytes:
+                fp_in.read(skip_bytes)
             while True:
                 data = fp_in.read(64*1024)
                 if not data:
