@@ -124,7 +124,7 @@ def parse_args():
     parser_list(subparsers)
 
     args = parser.parse_args()
-    return args
+    return parser
 
 def verify_roms(files, action, datfile=None, compress_type='zip', outdir=None):
     """Verifies ROM checksums and optionally uses them to rename or move the ROMs."""
@@ -169,7 +169,8 @@ def print_consoles():
 def main():
     """Main entry point."""
 
-    args = parse_args()
+    parser = parse_args()
+    args = parser.parse_args()
 
     if args.subcommand == 'organize':
         compress_type = None if args.no_compress else 'zip'
@@ -195,6 +196,8 @@ def main():
         raise NotImplementedError #TODO
     elif args.subcommand == 'list':
         print_consoles()
+    elif args.subcommand == None:
+        parser.print_help()
     else:
         raise RuntimeError('Unknown subcommand: %s' % args.subcommand)
 
